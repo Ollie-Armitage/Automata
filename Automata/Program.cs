@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Automata.Repositories;
+using Automata.Services;
 using Discord;
 using Discord.Addons.Hosting;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -65,7 +68,11 @@ namespace Automata
                         LogLevel = LogSeverity.Verbose
                     };
                 })
-                .ConfigureServices((context, services) => { })
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddSingleton<ClientRepository>();
+                    services.AddHostedService<RuntimeConfigurationService>();
+                })
                 .UseSerilog()
                 .UseConsoleLifetime();
             
