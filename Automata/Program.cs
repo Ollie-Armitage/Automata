@@ -71,6 +71,7 @@ namespace Automata
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<ClientRepository>();
+                    services.AddSingleton<CommandHandlerService>();
                     services.AddHostedService<RuntimeConfigurationService>();
                 })
                 .UseSerilog()

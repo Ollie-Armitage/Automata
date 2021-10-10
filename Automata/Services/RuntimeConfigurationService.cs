@@ -14,12 +14,14 @@ namespace Automata.Services
 {
     public class RuntimeConfigurationService : DiscordClientService
     {
+        private readonly CommandHandlerService _commandHandlerService;
         private readonly ClientRepository _clientRepository;
         private readonly ILogger<RuntimeConfigurationService> _logger;
         private readonly RuntimeConfigurationOptions _runtimeConfiguration;
 
-        public RuntimeConfigurationService(DiscordSocketClient client, ClientRepository clientRepository, IConfiguration configuration, ILogger<RuntimeConfigurationService> logger) : base(client, logger)
+        public RuntimeConfigurationService(CommandHandlerService commandHandlerService, DiscordSocketClient client, ClientRepository clientRepository, IConfiguration configuration, ILogger<RuntimeConfigurationService> logger) : base(client, logger)
         {
+            _commandHandlerService = commandHandlerService;
             _clientRepository = clientRepository;
             _logger = logger;
             _runtimeConfiguration = configuration.GetSection("RuntimeConfiguration")
@@ -32,8 +34,14 @@ namespace Automata.Services
             _clientRepository.SetStatusAsync(launchStatus);
         }
 
+        private async void PrepareCommandHandler()
+        {
+            await _commandHandlerService.InstallCommandsAsync();
+        }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            PrepareCommandHandler();
             SetLaunchStatus(_runtimeConfiguration?.launchStatus);
             return Task.CompletedTask;
         }
