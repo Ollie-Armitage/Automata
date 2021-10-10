@@ -21,23 +21,23 @@ namespace Automata.Repositories
             const UserStatus defaultStatus = UserStatus.Online;
             if(string.IsNullOrWhiteSpace(status))
             {
-                _logger.LogInformation("SetStatusAsync called with empty string, using default: {Status}", defaultStatus);
+                _logger.LogDebug("SetStatusAsync called with empty string, using default: {Status}", defaultStatus);
                 this.SetStatusAsync(defaultStatus);
                 return;
             }
 
             if (Enum.TryParse(status, true, out UserStatus newStatus))
             {
-                _logger.LogInformation("Setting bot status to: {Status}", newStatus);
+                _logger.LogDebug("Setting bot status to: {Status}", newStatus);
                 this.SetStatusAsync(newStatus);
                 return;
             }
             
-            _logger.LogWarning("Invalid bot status provided, using default: {Default}", defaultStatus);
+            _logger.LogDebug("Invalid bot status provided, using default: {Default}", defaultStatus);
             this.SetStatusAsync(defaultStatus);
         }
 
-        public void SetStatusAsync(UserStatus status)
+        private void SetStatusAsync(UserStatus status)
         {
             _client.SetStatusAsync(status);
         }

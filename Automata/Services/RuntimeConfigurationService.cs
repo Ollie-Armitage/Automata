@@ -28,6 +28,7 @@ namespace Automata.Services
 
         private void SetLaunchStatus(string launchStatus)
         {
+            _logger.LogInformation("Launch Status: {Status}", launchStatus);
             _clientRepository.SetStatusAsync(launchStatus);
         }
 
