@@ -21,7 +21,7 @@ namespace Automata.Repositories
             const UserStatus defaultStatus = UserStatus.Online;
             if(string.IsNullOrWhiteSpace(status))
             {
-                _logger.LogInformation("SetStatusAsync called with empty string, using default: {Status}", status);
+                _logger.LogInformation("SetStatusAsync called with empty string, using default: {Status}", defaultStatus);
                 this.SetStatusAsync(defaultStatus);
                 return;
             }

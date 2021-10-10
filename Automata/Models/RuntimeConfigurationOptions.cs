@@ -1,7 +1,7 @@
 ﻿namespace Automata.Models
 {
-    public abstract class RuntimeConfigurationOptions
+    public class RuntimeConfigurationOptions
     {
-        public string launchStatus { get; }
+        public string launchStatus { get; set; }
     }
 }
