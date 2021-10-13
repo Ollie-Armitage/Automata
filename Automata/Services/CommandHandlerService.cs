@@ -11,6 +11,7 @@ namespace Automata.Services
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
         private readonly ILogger<CommandHandlerService> _logger;
+        private char LaunchPrefix = '!';
 
         // Retrieve client and CommandService instance via ctor
         public CommandHandlerService(DiscordSocketClient client, CommandService commands, ILogger<CommandHandlerService> logger)
@@ -20,8 +21,9 @@ namespace Automata.Services
             _client = client;
         }
         
-        public async Task InstallCommandsAsync()
+        public async Task InstallCommandsAsync(char launchPrefix)
         {
+            LaunchPrefix = launchPrefix;
             // Hook the MessageReceived event into our command handler
             _client.MessageReceived += HandleCommandAsync;
 
@@ -41,14 +43,15 @@ namespace Automata.Services
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
             // Don't process the command if it was a system message
-            var message = messageParam as SocketUserMessage;
-            if (message == null) return;
+            if (messageParam is not SocketUserMessage message) return;
+            
+            
 
             // Create a number to track where the prefix ends and the command begins
             int argPos = 0;
 
             // Determine if the message is a command based on the prefix and make sure no bots trigger commands
-            if (!(message.HasCharPrefix('!', ref argPos) || 
+            if (!(message.HasCharPrefix(LaunchPrefix, ref argPos) || 
                 message.HasMentionPrefix(_client.CurrentUser, ref argPos)) ||
                 message.Author.IsBot)
                 return;

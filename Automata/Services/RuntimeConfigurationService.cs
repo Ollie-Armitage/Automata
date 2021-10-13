@@ -34,14 +34,26 @@ namespace Automata.Services
             _clientRepository.SetStatusAsync(launchStatus);
         }
 
-        private async void PrepareCommandHandler()
+        private async void PrepareCommandHandler(char? prefix)
         {
-            await _commandHandlerService.InstallCommandsAsync();
+           
+            if (!prefix.HasValue)
+            {
+                char defaultPrefix = '!';
+                _logger.LogInformation("No launch prefix provided, using default: {Prefix}", defaultPrefix);
+                prefix = defaultPrefix;
+            }
+            else
+            {
+                _logger.LogInformation("Launch Prefix: {Prefix}", prefix);
+            }
+            
+            await _commandHandlerService.InstallCommandsAsync(prefix.Value);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            PrepareCommandHandler();
+            PrepareCommandHandler(_runtimeConfiguration?.launchPrefix);
             SetLaunchStatus(_runtimeConfiguration?.launchStatus);
             return Task.CompletedTask;
         }
