@@ -4,7 +4,7 @@ using Discord.Commands;
 namespace Automata.Modules
 {
     // Create a module with no prefix
-    public class InfoModule : ModuleBase<SocketCommandContext>
+    public class EchoModule : ModuleBase<SocketCommandContext>
     {
         // ~echo hello world -> hello world
         [Command("echo")]
